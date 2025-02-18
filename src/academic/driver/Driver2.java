@@ -59,19 +59,23 @@ public class Driver2 {
                             String status = (parts.length == 6) ? parts[5] : "None";
                             
                             // Validasi apakah kodeMatkul dan nim ada
-                            boolean courseExists = courses.stream().anyMatch(course -> course.getCode().equals(kodeMatkul));
                             boolean studentExists = students.stream().anyMatch(student -> student.getNim().equals(nim));
+                            boolean courseExists = courses.stream().anyMatch(course -> course.getCode().equals(kodeMatkul));
+                            
+
+                            if (!studentExists) {
+                                System.out.println("invalid student|" + nim);
+                            }
 
                             if (!courseExists) {
                                 System.out.println("invalid course|" + kodeMatkul);
                             }
-                            if (!studentExists) {
-                                System.out.println("invalid student|" + nim);
-                            }
+                        
                             if (courseExists && studentExists) {
                                 enrollments.add(new Enrollment(nim, kodeMatkul, tahunAjaran, semester, status));
                             }
                         }
+
                         break;
                 }
             }

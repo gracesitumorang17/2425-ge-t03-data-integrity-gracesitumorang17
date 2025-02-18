@@ -81,20 +81,20 @@ public class Driver2 {
                    
         // Mengurutkan dan menampilkan semua courses yang tersimpan
         Collections.sort(courses, Comparator.comparing(Course::getCode));
-        for (int i = 0; i < courses.size(); i++) {
-            System.out.println(courses.get(i).toString());
+        for (Course course : courses) {
+            System.out.println(course.toString());
         }
 
         // Mengurutkan dan menampilkan semua students yang tersimpan
         Collections.sort(students, Comparator.comparing(Student::getNim));
-        for (int i = 0; i < students.size(); i++) {
-            System.out.println(students.get(i).toString());
+        for (Student student : students) {
+            System.out.println(student.toString());
         }
 
         // Mengurutkan dan menampilkan semua enrollments yang tersimpan
-        Collections.sort(enrollments, Comparator.comparing(Enrollment::getNim));
-        for (int i = 0; i < enrollments.size(); i++) {
-            System.out.println(enrollments.get(i).toString());
+        Collections.sort(enrollments, Comparator.comparing(Enrollment::getKodeMatkul).thenComparing(Enrollment::getNim));
+        for (Enrollment enrollment : enrollments) {
+            System.out.println(enrollment.toString());
         }
 
         scanner.close();

@@ -52,17 +52,25 @@ public class Driver1 {
                         break;
                     case "enrollment-add":
                         if (parts.length == 5 || parts.length == 6) {
-                            String nim = parts[1];
-                            String kodeMatkul = parts[2];
+                            String kodeMatkul = parts[1];
+                            String nim = parts[2];
                             String tahunAjaran = parts[3];
                             String semester = parts[4];
                             String status = (parts.length == 6) ? parts[5] : "None";
-                            enrollments.add(new Enrollment(nim, kodeMatkul, tahunAjaran, semester, status));
+                            
+                            // Validasi apakah kodeMatkul dan nim ada
+                            boolean courseExists = courses.stream().anyMatch(course -> course.getCode().equals(kodeMatkul));
+                            boolean studentExists = students.stream().anyMatch(student -> student.getNim().equals(nim));
+                            
+                            if (courseExists && studentExists) {
+                                enrollments.add(new Enrollment(nim, kodeMatkul, tahunAjaran, semester, status));
+                            }
                         }
                         break;
                 }
             }
         }
+
 
         // Mengurutkan dan menampilkan semua courses yang tersimpan
         Collections.sort(courses, Comparator.comparing(Course::getCode));

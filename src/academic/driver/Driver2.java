@@ -62,7 +62,6 @@ public class Driver2 {
                             boolean studentExists = students.stream().anyMatch(student -> student.getNim().equals(nim));
                             boolean courseExists = courses.stream().anyMatch(course -> course.getCode().equals(kodeMatkul));
                             
-
                             if (!studentExists) {
                                 System.out.println("invalid student|" + nim);
                             }
@@ -75,13 +74,11 @@ public class Driver2 {
                                 enrollments.add(new Enrollment(nim, kodeMatkul, tahunAjaran, semester, status));
                             }
                         }
-
                         break;
                 }
             }
         }
-                  
-                            
+                   
         // Mengurutkan dan menampilkan semua courses yang tersimpan
         Collections.sort(courses, Comparator.comparing(Course::getCode));
         for (int i = 0; i < courses.size(); i++) {

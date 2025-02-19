@@ -3,34 +3,34 @@ package academic.driver;
 import academic.model.Course;
 import academic.model.Enrollment;
 import academic.model.Student;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 /**
- * @autor 12S23008 Ranty Insen Pakpahan
- * @autor 12S23048 Grace Caldera Situmorang
+ * @author 12S23008 Ranty Insen Pakpahan
+ * @author 12S23048 Grace Caldera Situmorang
  */
-public class Driver2 {
 
+public class Driver2 {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         List<Course> courses = new ArrayList<>();
         List<Student> students = new ArrayList<>();
         List<Enrollment> enrollments = new ArrayList<>();
+        Set<String> invalidStudents = new HashSet<>();
+        Set<String> invalidCourses = new HashSet<>();
+        Map<String, Set<String>> enrollmentMap = new HashMap<>(); // Map to track unique course-enrollment combinations
 
+        // Simpan input terlebih dahulu, baru lakukan pengecekan dan pemrosesan
         while (scanner.hasNextLine()) {
             String input = scanner.nextLine();
             if (input.equals("---")) {
-                break; // Keluar dari loop jika input adalah ---
+                break;
             }
 
-            // Memisahkan input berdasarkan simbol #
             String[] parts = input.split("#");
             if (parts.length > 1) {
                 String command = parts[0];
+
                 switch (command) {
                     case "course-add":
                         if (parts.length == 5) {
@@ -41,8 +41,8 @@ public class Driver2 {
 
                             // Cek apakah course sudah ada
                             boolean exists = false;
-                            for (int i = 0; i < courses.size(); i++) {
-                                if (courses.get(i).getCode().equals(code)) {
+                            for (Course course : courses) {
+                                if (course.getCode().equals(code)) {
                                     exists = true;
                                     break;
                                 }
@@ -63,8 +63,8 @@ public class Driver2 {
 
                             // Cek apakah student sudah ada
                             boolean exists = false;
-                            for (int i = 0; i < students.size(); i++) {
-                                if (students.get(i).getNim().equals(nim)) {
+                            for (Student student : students) {
+                                if (student.getNim().equals(nim)) {
                                     exists = true;
                                     break;
                                 }
@@ -84,21 +84,43 @@ public class Driver2 {
                             String semester = parts[4];
                             String status = (parts.length == 6) ? parts[5] : "None";
 
-                            // Validasi apakah kodeMatkul dan nim ada
-                            boolean studentExists = students.stream().anyMatch(student -> student.getNim().equals(nim));
-                            boolean courseExists = courses.stream().anyMatch(course -> course.getCode().equals(kodeMatkul));
+                            // Add to enrollments if valid course and student
+                            boolean validCourse = false;
+                            boolean validStudent = false;
 
-                            // Output jika student atau course tidak ada
-                            if (!studentExists) {
-                                System.out.println("invalid student|" + nim);
-                            }
-                            if (!courseExists) {
-                                System.out.println("invalid course|" + kodeMatkul);
+                            // Check if course exists
+                            for (Course course : courses) {
+                                if (course.getCode().equals(kodeMatkul)) {
+                                    validCourse = true;
+                                    break;
+                                }
                             }
 
-                            // Hanya jika keduanya valid, maka enrollment ditambahkan
-                            if (studentExists && courseExists) {
-                                enrollments.add(new Enrollment(nim, kodeMatkul, tahunAjaran, semester, status));
+                            // Check if student exists
+                            for (Student student : students) {
+                                if (student.getNim().equals(nim)) {
+                                    validStudent = true;
+                                    break;
+                                }
+                            }
+
+                            if (!validCourse) {
+                                invalidCourses.add(kodeMatkul);
+                            }
+
+                            if (!validStudent) {
+                                invalidStudents.add(nim);
+                            }
+
+                            if (validCourse && validStudent) {
+                                // To avoid duplicate enrollments for the same student and course
+                                if (!enrollmentMap.containsKey(kodeMatkul)) {
+                                    enrollmentMap.put(kodeMatkul, new HashSet<>());
+                                }
+                                if (!enrollmentMap.get(kodeMatkul).contains(nim)) {
+                                    enrollmentMap.get(kodeMatkul).add(nim);
+                                    enrollments.add(new Enrollment(kodeMatkul, nim, tahunAjaran, semester, status));
+                                }
                             }
                         }
                         break;
@@ -106,25 +128,42 @@ public class Driver2 {
             }
         }
 
-        // Mengurutkan dan menampilkan semua courses yang tersimpan
-        Collections.sort(courses, Comparator.comparing(Course::getCode));
-        for (Course course : courses) {
-            System.out.println(course.getCode() + "|" + course.getCourseName() + "|" + course.getKredit() + "|" + course.getGrade());
+        // Validasi dan cetak hasil setelah semua input diproses
+        // Cek apakah setiap enrollment memiliki course dan student yang valid
+        for (String invalidStudent : invalidStudents) {
+            System.out.println("invalid student|" + invalidStudent);
         }
 
-        // Mengurutkan dan menampilkan semua students yang tersimpan
-        Collections.sort(students, Comparator.comparing(Student::getNama).reversed());
-        for (Student student : students) {
-            System.out.println(student.getNim() + "|" + student.getNama() + "|" + student.getTahun() + "|" + student.getJurusan());
+        for (String invalidCourse : invalidCourses) {
+            System.out.println("invalid course|" + invalidCourse);
         }
 
-        // Mengurutkan dan menampilkan semua enrollments yang tersimpan
-        Collections.sort(enrollments, Comparator.comparing(Enrollment::getKodeMatkul).reversed()
-                .thenComparing(Enrollment::getNim)
+        // Sort Course by code (urutan berdasarkan kode mata kuliah)
+        courses.sort(Comparator.comparing(Course::getCode));
+        for (Course c : courses) {
+            System.out.println(c.getCode() + "|" + c.getCourseName() + "|" + c.getKredit() + "|" + c.getGrade());
+        }
+
+        // Sort Student by name in reverse (urutan berdasarkan nama mahasiswa dari abjad terbesar)
+        students.sort(Comparator.comparing(Student::getNama).reversed());
+        for (Student s : students) {
+            System.out.println(s.getNim() + "|" + s.getNama() + "|" + s.getTahun() + "|" + s.getJurusan());
+        }
+
+        // Sort Enrollment by kodeMatkul in reverse (urutan berdasarkan kode mata kuliah dari terbesar ke terkecil)
+        enrollments.sort(Comparator.comparing(Enrollment::getKodeMatkul).reversed()
+                .thenComparing(Enrollment::getNim, Comparator.reverseOrder())
                 .thenComparing(Enrollment::getTahunAjaran)
                 .thenComparing(Enrollment::getSemester));
-        for (Enrollment enrollment : enrollments) {
-            System.out.println(enrollment.getKodeMatkul() + "|" + enrollment.getNim() + "|" + enrollment.getTahunAjaran() + "|" + enrollment.getSemester() + "|" + enrollment.getStatus());
+
+        // Output Enrollment with filtering for duplicates
+        Set<String> displayedEnrollments = new HashSet<>();
+        for (Enrollment e : enrollments) {
+            String enrollmentKey = e.getKodeMatkul() + "|" + e.getNim();
+            if (!displayedEnrollments.contains(enrollmentKey)) {
+                System.out.println(e.getKodeMatkul() + "|" + e.getNim() + "|" + e.getTahunAjaran() + "|" + e.getSemester() + "|" + e.getStatus());
+                displayedEnrollments.add(enrollmentKey);
+            }
         }
 
         scanner.close();

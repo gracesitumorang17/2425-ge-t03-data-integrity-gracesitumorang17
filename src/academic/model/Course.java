@@ -6,10 +6,10 @@ package academic.model;
  */
 public class Course {
 
-   private String code;
-   private String courseName;
-   private int kredit;
-   private String grade;
+   private final String code;
+   private final String courseName;
+   private final int kredit;
+   private final String grade;
 
    public Course (String code, String courseName, int kredit, String grade){
     this.code = code;
@@ -39,4 +39,3 @@ public class Course {
      return code + "|" + courseName + "|" + kredit + "|" + grade;
     }
 }
-

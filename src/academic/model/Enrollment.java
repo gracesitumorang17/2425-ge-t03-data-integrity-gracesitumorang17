@@ -5,10 +5,10 @@ package academic.model;
  * @author 12S23048 Grace Caldera Situmorang
  */
 public class Enrollment {
-    private String nim;
-    private String kodeMatkul;
-    private String tahunAjaran;
-    private String semester;
+    private final String nim;
+    private final String kodeMatkul;
+    private final String tahunAjaran;
+    private final String semester;
     private String status;
 
     public Enrollment(String nim, String kodeMatkul, String tahunAjaran, String semester, String status){

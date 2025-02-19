@@ -5,10 +5,10 @@ package academic.model;
  * @author 12S23048 Grace Caldera Situmorang
  */
 public class Student {
-    private String nim;
-    private String nama;
-    private int tahun;
-    private String jurusan;
+    private final String nim;
+    private final String nama;
+    private final int tahun;
+    private final String jurusan;
 
     public Student (String nim, String nama, int tahun, String jurusan){
         this.nim = nim;

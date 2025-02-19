@@ -71,7 +71,6 @@ public class Driver1 {
                             }
                         }
                         break;
-                        
 
                     case "enrollment-add":
                         if (parts.length == 5 || parts.length == 6) {
@@ -128,7 +127,7 @@ public class Driver1 {
 
         // Sort Enrollment by kodeMatkul in reverse (urutan berdasarkan kode mata kuliah dari terbesar ke terkecil)
         enrollments.sort(Comparator.comparing(Enrollment::getKodeMatkul).reversed()
-                .thenComparing(Enrollment::getNim, Comparator.reverseOrder())
+                .thenComparing(Enrollment::getNim)
                 .thenComparing(Enrollment::getTahunAjaran)
                 .thenComparing(Enrollment::getSemester));
 
@@ -137,6 +136,7 @@ public class Driver1 {
             System.out.println(e.getNim() + "|" + e.getKodeMatkul() + "|" + e.getTahunAjaran() + "|" + e.getSemester() + "|" + e.getStatus());
         }
 
+        
         scanner.close();
     }
 }

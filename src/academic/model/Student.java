@@ -34,5 +34,4 @@ public class Student {
  public String toString(){
     return nim+"|"+nama+"|"+tahun+"|"+jurusan;
  }
-
 }

@@ -20,6 +20,7 @@ public class Driver2 {
 
         Set<String> displayedErrors = new LinkedHashSet<>(); // Menggunakan LinkedHashSet agar urutan error tetap
 
+        
         // Tahap 1: Menyimpan semua input
         while (scanner.hasNextLine()) {
             String input = scanner.nextLine();

@@ -45,6 +45,7 @@ public class Driver2 {
                             }
                         }
                         break;
+                        
 
                     case "student-add":
                         if (parts.length == 5) {
@@ -99,7 +100,7 @@ public class Driver2 {
         courses.sort(Comparator.comparing(Course::getCode));
         courses.forEach(c -> System.out.println(c.getCode() + "|" + c.getCourseName() + "|" + c.getKredit() + "|" + c.getGrade()));
 
-        students.sort(Comparator.comparing(Student::getNama)); // Urutkan berdasarkan nama
+        students.sort(Comparator.comparing(Student::getNama).reversed()); // Urutkan berdasarkan nama
         students.forEach(s -> System.out.println(s.getNim() + "|" + s.getNama() + "|" + s.getTahun() + "|" + s.getJurusan()));
 
         enrollments.sort(Comparator.comparing(Enrollment::getKodeMatkul).reversed()
@@ -111,4 +112,3 @@ public class Driver2 {
         scanner.close();
     }
 }
-
